@@ -1,12 +1,11 @@
 ## Cel projektu
-Celem projektu jest zaprezentowanie rożnych wykresów przedstawiajacych ciekawe zależności z milionów partii szachowych. Wśród nich znajdą się:
-- wykresy obrazujące procent zwycięstw danego koloru w zależności od czasu,
+Celem projektu jest zaprezentowanie rożnych wykresów przedstawiajacych ciekawe zależności z milionów partii szachowych. Wśród nich znajdą się: 
+
 - hot-mapa wizualizująca gdzie najczęściej zostaje wykonany ruch,
+- wykresy obrazujące procent zwycięstw danego koloru w zależności od czasu,
 - rozkład przedstawiający liczbę ruchów w partiach,
 - porównania powyższych zależności między najlepszymi graczami, a średnim poziomem,
 - porównanie powyższych statystyk w zależności od ilości czasu na każdego gracza.
-
-
 
 
 ## Lista problemów koncepcyjnych do rozwiązania
@@ -28,4 +27,7 @@ Celem projektu jest zaprezentowanie rożnych wykresów przedstawiajacych ciekawe
     - Karp-Flatt
 
 ## Szkic rozwiązania
- - Do przetworzenia danych zostanie wykorzystana biblioteka Ray (https://github.com/ray-project/ray). Infrastruktura zostanie postawiona na AWS.
+ Do przetworzenia danych zostanie wykorzystana biblioteka Ray (https://github.com/ray-project/ray). Biblioteka ta powina pozwalać na łatwe przeniesienie pytonowego kodu z "laptopa do klastra". Dodatkowo duża część przetwarzania danych odbywa się równolegle, a zadaniem użytkownika jest tylko zdefiniowanie odpowiednich funkcji pythonowych. Jest to duży plus, jeżeli posiadamy duże zbiory danych. 
+ Ray zostanie wykorzystany do równoległego przetwarzania danych, wyciągania odpowiednich wartości i zapisania końcowcyh danych i wyników do plików csv. Następnie na podstawie tych plików, zostaną zwizualizowane wszelkie wykresy. Jednka odbędzie się to już lokalnie.
+
+ Infrastruktura zostanie postawiona na AWS. Jednak z powodu ograniczeń związanyc z kontem AWS Academy, zostanie wykorzystany Kubernetes i serwis EKS. 
