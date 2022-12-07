@@ -28,7 +28,7 @@ def split(
                         f'{output_dir}/{counter//games_per_file}.txt',
                         'a'
                     ) as output_file:
-                        output_file.write(''.join(one_png))
+                        output_file.write(''.join(one_png)+'\n')
                     one_png = []
                     counter += 1
                     if counter >= num_of_files * games_per_file:
