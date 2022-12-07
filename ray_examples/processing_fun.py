@@ -6,21 +6,28 @@ import numpy as np
 from collections import defaultdict
 
 
-def process(file_path, filters={}, aggregate=""):
-    results = []
+def filter_out_games(games, filters):
+    filltered_games = []
 
+    for key, value in filters.items():
+        for game in games:
+            if key in game.headers and game.headers[key] == value:
+                filltered_games.append(game)
+    return filltered_games
+    
+
+def process(file_path, filters={}, aggregate=""):
+    games = []
+    pgn = []
     with open(file_path) as input:
-        games = []
-        pgn = []
         for line in input:
             if line == '\n':
                 games.append(chess.pgn.read_game(io.StringIO('\n'.join(pgn))))
                 pgn = []
             else:
                 pgn.append(line)                
-    print(games)
 
-    # for key, value in filters.items():
+    games = filter_out_games(games, filters)
 
     if aggregate == 'heatmap':
         heatmap = np.zeros((12, 64))
@@ -56,4 +63,4 @@ def process(file_path, filters={}, aggregate=""):
 
 
 if __name__ == '__main__':
-    process('output/0.txt', aggregate='move_dist')
+    process('output/0.txt', aggregate='move_dist', filters={'Result': '0-1'})
