@@ -7,16 +7,16 @@ from collections import defaultdict
 
 
 def filter_out_games(games, filters):
-    filltered_games = []
+    filtered_games = []
 
     for key, value in filters.items():
         for game in games:
             if key in game.headers and game.headers[key] == value:
-                filltered_games.append(game)
-    return filltered_games
+                filtered_games.append(game)
+    return filtered_games
     
 
-def process(file_path, filters={}, aggregate=""):
+def process_file(file_path, filters=None, aggregate=""):
     games = []
     pgn = []
     with open(file_path) as input:
@@ -27,7 +27,7 @@ def process(file_path, filters={}, aggregate=""):
             else:
                 pgn.append(line)                
 
-    games = filter_out_games(games, filters)
+    games = filter_out_games(games, filters) if filters is not None else games
 
     if aggregate == 'heatmap':
         heatmap = np.zeros((12, 64))
@@ -63,4 +63,5 @@ def process(file_path, filters={}, aggregate=""):
 
 
 if __name__ == '__main__':
-    process('output/0.txt', aggregate='move_dist', filters={'Result': '0-1'})
+    heatmap = process_file('processed_input_1/0.txt', aggregate='heatmap')
+    np.savetxt('output_1/heatmap_0.txt', heatmap)

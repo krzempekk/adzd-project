@@ -1,5 +1,11 @@
+# Rozproszone przetwarzanie danych z użyciem Ray - opracowanie teoretyczne projektu
+
+### Tomasz Lamża, Kamil Krzempek
+
+### listopad 2022
+
 ## Cel projektu
-Celem projektu jest zaprezentowanie rożnych wykresów przedstawiajacych ciekawe zależności z milionów partii szachowych. Wśród nich znajdą się: 
+Celem projektu jest zastosowanie narzędzia Ray do przeanalizowania milionów partii szachowych, a następnie zaprezentowanie rożnych wykresów przedstawiajacych ciekawe zależności. Wśród nich znajdą się: 
 
 - hot-mapa wizualizująca gdzie najczęściej zostaje wykonany ruch,
 - wykresy obrazujące procent zwycięstw danego koloru w zależności od czasu,

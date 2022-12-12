@@ -39,7 +39,7 @@ def split(
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--input', help='path to input file')
-    parser.add_argument('--output', help='path to output dir', default='output')
+    parser.add_argument('--processed_input_0', help='path to processed_input_0 dir', default='processed_input_0')
     parser.add_argument('--num_of_files', help='number of files to produce', type=int, default=1)
     parser.add_argument('--games', help='number of games per file', type=int, default=10)
     args = parser.parse_args()
