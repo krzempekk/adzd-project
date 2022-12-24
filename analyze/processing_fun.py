@@ -1,4 +1,3 @@
-import re
 import io
 import chess.pgn
 import numpy as np
@@ -6,13 +5,79 @@ import numpy as np
 from collections import defaultdict
 
 
+def filter_result(game, result):
+    return "Result" in game.headers and game.headers["Result"] == result
+
+
+def filter_time_le(game, value):
+    if "TimeControl" not in game.headers:
+        return False
+    
+    time_control, _ = game.headers["TimeControl"].split("+")
+    time_control = int(time_control)
+    if value >= time_control:
+        return True
+    return False
+
+
+def filter_time_ge(game, value):
+    if "TimeControl" not in game.headers:
+        return False
+    
+    time_control, _ = game.headers["TimeControl"].split("+")
+    time_control = int(time_control)
+    if value <= time_control:
+        return True
+    return False
+
+
+def filter_elo_ge(game, value):
+    if "WhiteElo" not in game.headers or "BlackElo" not in game.headers:
+        return False
+    
+    white_elo = int(game.headers["WhiteElo"])
+    black_elo = int(game.headers["BlackElo"])
+    if white_elo >= value and black_elo >= value:
+        return True
+    return False
+
+
+def filter_elo_le(game, value):
+    if "WhiteElo" not in game.headers or "BlackElo" not in game.headers:
+        return False
+    
+    white_elo = int(game.headers["WhiteElo"])
+    black_elo = int(game.headers["BlackElo"])
+    if white_elo <= value and black_elo <= value:
+        return True
+    return False
+
+
 def filter_out_games(games, filters):
+    # Available filters and possible values:
+    #   "result": "1-0"/"0-1"/"1/2-1/2"
+    #   "time_le": <time in sec> (filters out games with greater time control)
+    #   "time_ge": <time in sec> (filters out games with lower time control)
+    #   "elo_le": <value> (filters out games with players above provided elo)
+    #   "elo_ge": <value> (filters out games with players below provided elo)
+
+    filter_functions = {
+        "result": filter_result,
+        "time_le": filter_time_le,
+        "time_ge": filter_time_ge,
+        "elo_le": filter_elo_le,
+        "elo_ge": filter_elo_ge
+    }
+
     filtered_games = []
 
-    for key, value in filters.items():
-        for game in games:
-            if key in game.headers and game.headers[key] == value:
-                filtered_games.append(game)
+    for game in games:
+        for key, value in filters.items():
+            if not filter_functions[key](game, value):
+                break
+        else:
+            print(game.headers)
+            filtered_games.append(game)
     return filtered_games
     
 
@@ -63,5 +128,14 @@ def process_file(file_path, filters=None, aggregate=""):
 
 
 if __name__ == '__main__':
-    heatmap = process_file('processed_input_1/0.txt', aggregate='heatmap')
-    np.savetxt('output_1/heatmap_0.txt', heatmap)
+    heatmap = process_file(
+        'processed_input_0/0.txt', 
+        aggregate='heatmap', 
+        filters={
+            "result": "1-0",
+            "elo_ge": 1000,
+            "time_ge": 180
+        }
+    )
+    # print(heatmap)
+    # np.savetxt('output_1/heatmap_0.txt', heatmap)
