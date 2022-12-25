@@ -1,4 +1,5 @@
 import io
+import json
 import chess.pgn
 import numpy as np
 
@@ -76,7 +77,6 @@ def filter_out_games(games, filters):
             if not filter_functions[key](game, value):
                 break
         else:
-            print(game.headers)
             filtered_games.append(game)
     return filtered_games
     
@@ -128,14 +128,23 @@ def process_file(file_path, filters=None, aggregate=""):
 
 
 if __name__ == '__main__':
-    heatmap = process_file(
-        'processed_input_0/0.txt', 
-        aggregate='heatmap', 
-        filters={
-            "result": "1-0",
-            "elo_ge": 1000,
-            "time_ge": 180
-        }
-    )
+    # heatmap = process_file(
+    #     'processed_input_0/0.txt', 
+    #     aggregate='heatmap', 
+    #     filters={
+    #         "result": "1-0",
+    #         "elo_ge": 1000,
+    #         "time_ge": 180
+    #     }
+    # )
+
+    input_file = 'processed_input_0/0.txt'
+
+    with open('analyze/experiments.json') as experiments:
+        experiments_setup = json.load(experiments)
+
+        for setup in experiments_setup:
+            result = process_file(input_file, **setup)
+
     # print(heatmap)
     # np.savetxt('output_1/heatmap_0.txt', heatmap)

@@ -1,0 +1,93 @@
+[
+    {
+        "aggregate": "wins",
+        "filters": {
+            "elo_ge": 1800
+        }
+    },
+    {
+        "aggregate": "wins",
+        "filters": {
+            "elo_le": 1800
+        }
+    },
+    {
+        "aggregate": "wins",
+        "filters": {
+            "time_ge": 500
+        }
+    },
+    {
+        "aggregate": "wins",
+        "filters": {
+            "time_le": 500
+        }
+    },
+    {
+        "aggregate": "wins",
+        "filters": {
+            "time_ge": 500
+        }
+    },
+    {
+        "aggregate": "wins",
+        "filters": {
+            "elo_ge": 1800
+        }
+    },
+    {
+        "aggregate": "wins",
+        "filters": {
+            "elo_ge": 1800,
+            "time_ge": 500
+        }
+    },
+    {
+        "aggregate": "move_dist",
+        "filters": {
+            "elo_le": 1800
+        }
+    },
+    {
+        "aggregate": "move_dist",
+        "filters": {
+            "time_ge": 500
+        }
+    },
+    {
+        "aggregate": "move_dist",
+        "filters": {
+            "time_le": 500
+        }
+    },
+    {
+        "aggregate": "move_dist",
+        "filters": {
+            "time_ge": 500
+        }
+    },
+    {
+        "aggregate": "move_dist",
+        "filters": {
+            "result": "1/2-1/2"
+        }
+    },
+    {
+        "aggregate": "heatmap",
+        "filters": {
+            "result": "1/2-1/2"
+        }
+    },
+    {
+        "aggregate": "heatmap",
+        "filters": {
+            "time_ge": 500
+        }
+    },
+    {
+        "aggregate": "heatmap",
+        "filters": {
+            "time_le": 500
+        }
+    }
+]
