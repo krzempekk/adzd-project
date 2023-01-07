@@ -1,7 +1,9 @@
 import io
 import json
+import itertools
 import chess.pgn
 import numpy as np
+import matplotlib.pyplot as plt
 
 from collections import defaultdict
 
@@ -11,7 +13,7 @@ def filter_result(game, result):
 
 
 def filter_time_le(game, value):
-    if "TimeControl" not in game.headers:
+    if "TimeControl" not in game.headers or game.headers["TimeControl"] == '-':
         return False
     
     time_control, _ = game.headers["TimeControl"].split("+")
@@ -22,7 +24,7 @@ def filter_time_le(game, value):
 
 
 def filter_time_ge(game, value):
-    if "TimeControl" not in game.headers:
+    if "TimeControl" not in game.headers or game.headers["TimeControl"] == '-':
         return False
     
     time_control, _ = game.headers["TimeControl"].split("+")
@@ -81,17 +83,7 @@ def filter_out_games(games, filters):
     return filtered_games
     
 
-def process_file(file_path, filters=None, aggregate=""):
-    games = []
-    pgn = []
-    with open(file_path) as input:
-        for line in input:
-            if line == '\n':
-                games.append(chess.pgn.read_game(io.StringIO('\n'.join(pgn))))
-                pgn = []
-            else:
-                pgn.append(line)                
-
+def process_games(games=[], filters=None, aggregate=""):
     games = filter_out_games(games, filters) if filters is not None else games
 
     if aggregate == 'heatmap':
@@ -127,24 +119,75 @@ def process_file(file_path, filters=None, aggregate=""):
         return distribution
 
 
-if __name__ == '__main__':
-    # heatmap = process_file(
-    #     'processed_input_0/0.txt', 
-    #     aggregate='heatmap', 
-    #     filters={
-    #         "result": "1-0",
-    #         "elo_ge": 1000,
-    #         "time_ge": 180
-    #     }
-    # )
-
-    input_file = 'processed_input_0/0.txt'
-
+def all_experiments(games):
     with open('analyze/experiments.json') as experiments:
         experiments_setup = json.load(experiments)
-
+        counter = 0
         for setup in experiments_setup:
-            result = process_file(input_file, **setup)
+            result = process_games(games=games, **setup)
+            plt.clf()
+            if setup['aggregate'] == 'wins':
+                print(setup['filters'], result)
+            elif setup['aggregate'] == 'move_dist':
+                plt.bar(result.keys(), result.values(), color='g')
+                plt.title(setup['filters'])
+                plt.savefig(f'docs/results/{counter}.png')
+            elif setup['aggregate'] == 'heatmap':
+                heatmap = np.sum(result, axis=0).reshape((8, 8))
+                heatmap = heatmap / heatmap.max()
 
-    # print(heatmap)
-    # np.savetxt('output_1/heatmap_0.txt', heatmap)
+                plt.imshow(heatmap, cmap='hot', interpolation='nearest')
+                plt.xticks(range(8), ['%c' % x for x in range(65, 65 + 8)])
+                plt.yticks(range(8), range(8, 0, -1))
+
+                plt.title(f"Heatmap {setup['filters']}")
+
+                plt.colorbar()
+
+                plt.savefig(f'docs/results/{counter}.png')
+            counter += 1
+
+
+def heatmap(games):
+    result = process_games(games=games, aggregate='heatmap')
+    figures = ["pawn", "knight", "bishop", "rook", "queen", "king"]
+
+    for i, figure in enumerate(figures):
+        plt.clf()
+        heatmap = result[6+i].reshape((8, 8))
+
+        heatmap = heatmap / heatmap.max()
+        plt.imshow(heatmap, cmap='hot', interpolation='nearest')
+
+        plt.xticks(range(8), ['%c' % x for x in range(65, 65 + 8)])
+        plt.yticks(range(8), range(8, 0, -1))
+        plt.title(f"Heatmap {figure}")
+        plt.colorbar()
+        plt.savefig(f'docs/results/black_{figure}.png')
+
+
+if __name__ == '__main__':
+    input_file = 'lichess_db_standard_rated_2015-12.pgn'
+
+    games = []
+    pgn = []
+    counter = 0
+    parity = 1
+    with open(input_file) as input:
+        for line in input:
+            if line == '\n':
+                parity *= -1
+                if parity == -1:
+                    continue
+                games.append(chess.pgn.read_game(io.StringIO('\n'.join(pgn))))
+                counter += 1
+                if counter % 100_00 == 0:
+                    print(counter)
+                if counter % 1000 == 0:
+                    break
+                pgn = []
+            else:
+                pgn.append(line)
+
+    # all_experiments(games)
+    heatmap(games)

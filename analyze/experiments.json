@@ -2,6 +2,11 @@
     {
         "aggregate": "wins",
         "filters": {
+        }
+    },
+    {
+        "aggregate": "wins",
+        "filters": {
             "elo_ge": 1800
         }
     },
@@ -45,13 +50,18 @@
     {
         "aggregate": "move_dist",
         "filters": {
+        }
+    },
+    {
+        "aggregate": "move_dist",
+        "filters": {
             "elo_le": 1800
         }
     },
     {
         "aggregate": "move_dist",
         "filters": {
-            "time_ge": 500
+            "elo_ge": 1800
         }
     },
     {
@@ -76,6 +86,11 @@
         "aggregate": "heatmap",
         "filters": {
             "result": "1/2-1/2"
+        }
+    },
+    {
+        "aggregate": "heatmap",
+        "filters": {
         }
     },
     {
