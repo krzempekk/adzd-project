@@ -1,0 +1,12 @@
+test description
+number of parties: 100000
+instance type: t3.medium
+
+times:
+- 2 nodes: 218.3098123073578
+- 3 nodes: 163.1377456188202
+- 4 nodes: 124.27538418769836
+- 5 nodes: 85.18426299095154
+- 6 nodes: 74.92982125282288
+- 7 nodes: 63.179261922836304
+- 8 nodes: 55.21634387969971
